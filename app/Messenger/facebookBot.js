@@ -120,8 +120,8 @@ async function receivedMessage(event) {
 }
 
 async function saveUserData(facebookId) {
-    let isRegistered = await findOne({ facebookId });
-    if (isRegistered) return;
+    // let isRegistered = await findOne({ facebookId });
+    // if (isRegistered) return;
     let userData = await getUserData(facebookId);
     let chatbotUser = new ChatbotUser({
         firstName: userData.first_name,
@@ -333,7 +333,7 @@ async function getUserData(senderId) {
     let access_token = config.FB_PAGE_TOKEN;
     try {
         let userData = await axios.get(
-            "https://graph.facebook.com/v6.0/" + senderId,
+            "https://graph.facebook.com/v14.0/" + senderId,
             {
                 params: {
                     access_token,
