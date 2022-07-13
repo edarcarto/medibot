@@ -3,7 +3,7 @@ const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestor
 
 const serviceAccount = require('./SA.js');
 initializeApp({
-    credential: cert(serviceAccount)
+    credential: cert(JSON.stringify(serviceAccount))
 });
 
 const db = getFirestore();
