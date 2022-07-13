@@ -17,6 +17,8 @@ async function createUser (params) {
         facebookId: params.facebookId,
         profilePic: params.profilePic
     });
+
+    return docRef;
 }
 
 async function findUser(params) {
