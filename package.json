@@ -4,8 +4,8 @@
   "description": "A nodejs chatbot server",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js -e *"
+    "start": "node app/server.js",
+    "dev": "nodemon app/server.js -e *"
   },
   "repository": {
     "type": "git",
