@@ -8,6 +8,7 @@ const axios = require("axios");
 const config = require("../config");
 const dialogflow = require("../dialogflow");
 const { structProtoToJson } = require("./helpers/structFunctions");
+const { createUser,findUser } = require('../DB/Firestore');
 
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
@@ -120,19 +121,20 @@ async function receivedMessage(event) {
 }
 
 async function saveUserData(facebookId) {
-    // let isRegistered = await findOne({ facebookId });
-    // if (isRegistered) return;
+    let isRegistered = await findUser({ facebookId });
+    if (isRegistered) return;
     let userData = await getUserData(facebookId);
-    let chatbotUser = new ChatbotUser({
+    let chatbotUser = await createUser({
         firstName: userData.first_name,
         lastName: userData.last_name,
         facebookId,
         profilePic: userData.profile_pic,
     });
-    chatbotUser.save((err, res) => {
-        if (err) return console.log(err);
-        console.log("Se creo un usuario:", res);
-    });
+    console.log("Se creo un usuario:", chatbotUser);
+    // chatbotUser.save((err, res) => {
+    //     if (err) return console.log(err);
+    //     console.log("Se creo un usuario:", res);
+    // });
 }
 
 function handleMessageAttachments(messageAttachments, senderId) {
