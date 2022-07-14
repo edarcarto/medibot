@@ -582,7 +582,7 @@ async function sendServicesCarousel(recipientId, elements) {
                 type: "template",
                 payload: {
                     template_type: "generic",
-                    "elements": elements
+                    elements: elements
                 }
             }
         }
