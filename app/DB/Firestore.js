@@ -41,13 +41,18 @@ async function getCarouselServices() {
         const node = {
             "title": doc.data().name,
             "image_url": doc.data().url,
-            "subtitle": "We have the right hat for everyone.",
+            subtitle: `Los doctores en ${doc.data().name} son especialistas en su cargo`,
             default_action: {
-                type: "postback",
-                title: "Elegir",
-                payload: "IDENTIFY_medics"
+                type: "web_url",
+                url: doc.data().url,
+                webview_height_ratio: "tall",
             },
             buttons: [
+                {
+                    "type": "web_url",
+                    "url": doc.data().url,
+                    "title": "Ver Imagen"
+                },
                 {
                     type: "postback",
                     title: "Elegir",
