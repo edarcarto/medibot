@@ -73,11 +73,11 @@ async function getCarouselDoctors() {
         const node = {
             "title": doc.data().name,
             "image_url": doc.data().url,
-            subtitle: `El doctor ${doc.data().name} es un ${doc.data().position}`,
+            subtitle: `El doctor ${doc.data().name} es ${doc.data().position}`,
             default_action: {
                 type: "web_url",
                 url: doc.data().url,
-                webview_height_ratio: "tall",
+                webview_height_ratio: "compact",
             },
             buttons: [
                 {
