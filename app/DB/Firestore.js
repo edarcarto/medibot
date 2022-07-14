@@ -56,7 +56,7 @@ async function getCarouselServices() {
                 {
                     type: "postback",
                     title: "Elegir",
-                    payload: "IDENTIFY_doctors"
+                    payload: doc.data().id
                 }
             ]
         }
@@ -77,7 +77,7 @@ async function getCarouselDoctors() {
             default_action: {
                 type: "web_url",
                 url: doc.data().url,
-                webview_height_ratio: "compact",
+                webview_height_ratio: "full",
             },
             buttons: [
                 {
