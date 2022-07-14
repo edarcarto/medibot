@@ -179,7 +179,7 @@ async function handleDialogFlowAction(
             break;
         case "listDoctors.ACTION":
             console.log("[parameters]",parameters);
-            let doctors = await getCarouselDoctors()
+            let doctors = await getCarouselDoctors(parameters)
             await handleMessages(messages, sender);
             await sendServicesCarousel(sender, doctors);
             break;
