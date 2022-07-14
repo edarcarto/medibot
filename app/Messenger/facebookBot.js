@@ -174,7 +174,6 @@ async function handleDialogFlowAction(
     switch (action) {
         case "listServices.ACTION":
             const cards = await getCarouselServices()
-            console.log("[cards]",cards);
             await sendServicesCarousel(sender,cards);
             break;
         default:
@@ -524,7 +523,7 @@ function callSendAPI(messageData) {
                     }
                     resolve();
                 } else {
-                    reject();
+                    reject(error);
                     console.error(
                         "Failed calling Send API",
                         response.statusCode,
@@ -587,6 +586,7 @@ async function sendServicesCarousel(recipientId, elements) {
             }
         }
     }
+    console.log("[cards]",messageData);
     await callSendAPI(messageData);
 }
 module.exports = router;
