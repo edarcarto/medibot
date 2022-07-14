@@ -56,18 +56,50 @@ async function getCarouselServices() {
                 {
                     type: "postback",
                     title: "Elegir",
-                    payload: "IDENTIFY_medics"
+                    payload: "IDENTIFY_doctors"
                 }
             ]
         }
         dataSet.push(node);
     });
-    // console.log("[dataSet]",dataSet);
+    return dataSet;
+}
+
+async function getCarouselDoctors() {
+    const servicesRef = db.collection('doctors');
+    const snapshot = await servicesRef.get();
+    let dataSet = [];
+    snapshot.forEach(doc => {
+        const node = {
+            "title": doc.data().name,
+            "image_url": doc.data().url,
+            subtitle: `El doctor ${doc.data().name} es un ${doc.data().position}`,
+            default_action: {
+                type: "web_url",
+                url: doc.data().url,
+                webview_height_ratio: "tall",
+            },
+            buttons: [
+                {
+                    "type": "web_url",
+                    "url": doc.data().url,
+                    "title": "Ver Imagen"
+                },
+                {
+                    type: "postback",
+                    title: "Elegir",
+                    payload: "IDENTIFY_schedules"
+                }
+            ]
+        }
+        dataSet.push(node);
+    });
     return dataSet;
 }
 
 module.exports = {
     createUser,
     findUser,
-    getCarouselServices
+    getCarouselServices,
+    getCarouselDoctors
 };
