@@ -8,7 +8,7 @@ initializeApp({
 
 const db = getFirestore();
 
-async function createUser (params) {
+async function createUser(params) {
     const docRef = db.collection('users').doc(params.facebookId);
 
     await docRef.set({
@@ -33,7 +33,35 @@ async function findUser(params) {
     }
 }
 
+async function getCarouselServices() {
+    const servicesRef = db.collection('services');
+    const snapshot = await servicesRef.get();
+    let dataSet = [];
+    snapshot.forEach(doc => {
+        const node = {
+            "title": doc.data().name,
+            "image_url": doc.data().url,
+            // "subtitle": "We have the right hat for everyone.",
+            default_action: {
+                type: "postback",
+                title: "Elegir",
+                payload: doc.data().name
+            },
+            buttons: [
+                {
+                    type: "postback",
+                    title: "Elegir",
+                    payload: doc.data().name
+                }
+            ]
+        }
+        dataSet.push(doc.data());
+    });
+    return dataSet;
+}
+
 module.exports = {
     createUser,
-    findUser
+    findUser,
+    getCarouselServices
 };

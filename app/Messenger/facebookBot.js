@@ -8,7 +8,7 @@ const axios = require("axios");
 const config = require("../config");
 const dialogflow = require("../dialogflow");
 const { structProtoToJson } = require("./helpers/structFunctions");
-const { createUser,findUser } = require('../DB/Firestore');
+const { createUser, findUser, getCarouselServices } = require('../DB/Firestore');
 
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
@@ -172,6 +172,10 @@ async function handleDialogFlowAction(
     parameters
 ) {
     switch (action) {
+        case "listServices.ACTION":
+            const cards = await getCarouselServices()
+            sendGenericMessage(sender,cards);
+            break;
         default:
             //unhandled action, just send back the text
             handleMessages(messages, sender);
@@ -311,7 +315,7 @@ async function sendToDialogFlow(senderId, messageText) {
 }
 
 function handleDialogFlowResponse(sender, response) {
-    console.log("[response]",response);
+    console.log("[response]", response);
     let responseText = response.fulfillmentMessages.fulfillmentText;
     let messages = response.fulfillmentMessages;
     let action = response.action;
@@ -566,4 +570,21 @@ function isDefined(obj) {
     return obj != null;
 }
 
+async function sendServicesCarousel(recipientId, elements) {
+
+    var messageData = {
+        recipient: {
+            id: recipientId
+        },
+        message: {
+            attachment: {
+                type: "template",
+                payload: {
+                    template_type: "generic",
+                    "elements": elements
+                }
+            }
+        }
+    }
+}
 module.exports = router;
