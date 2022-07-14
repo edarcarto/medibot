@@ -66,7 +66,8 @@ async function getCarouselServices() {
 }
 
 async function getCarouselDoctors(parameters) {
-    const servicesRef = db.collection('doctors').where('serviceId',parameters.fields.serviceId.stringValue);
+    const servicesRef = db.collection('doctors')
+        .where('serviceId','==',parameters.fields.serviceId.stringValue);
     const snapshot = await servicesRef.get();
     let dataSet = [];
     snapshot.forEach(doc => {
