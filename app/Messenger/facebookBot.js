@@ -8,7 +8,7 @@ const axios = require("axios");
 const config = require("../config");
 const dialogflow = require("../dialogflow");
 const { structProtoToJson } = require("./helpers/structFunctions");
-const { createUser, findUser, getCarouselServices } = require('../DB/Firestore');
+const { createUser, findUser, getCarouselServices, getCarouselDoctors } = require('../DB/Firestore');
 
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
@@ -173,8 +173,14 @@ async function handleDialogFlowAction(
 ) {
     switch (action) {
         case "listServices.ACTION":
-            const cards = await getCarouselServices()
-            await sendServicesCarousel(sender,cards);
+            let services = await getCarouselServices()
+            await handleMessages(messages, sender);
+            await sendServicesCarousel(sender, services);
+            break;
+        case "listDoctors.ACTION":
+            let doctors = await getCarouselDoctors()
+            await handleMessages(messages, sender);
+            await sendServicesCarousel(sender, doctors);
             break;
         default:
             //unhandled action, just send back the text
@@ -586,7 +592,7 @@ async function sendServicesCarousel(recipientId, elements) {
             }
         }
     }
-    console.log("[cards]",messageData);
+    console.log("[cards]", messageData);
     await callSendAPI(messageData);
 }
 module.exports = router;
