@@ -55,7 +55,7 @@ async function getCarouselServices() {
                 }
             ]
         }
-        dataSet.push(doc.data());
+        dataSet.push(node);
     });
     return dataSet;
 }

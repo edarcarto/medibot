@@ -174,7 +174,7 @@ async function handleDialogFlowAction(
     switch (action) {
         case "listServices.ACTION":
             const cards = await getCarouselServices()
-            sendGenericMessage(sender,cards);
+            sendServicesCarousel(sender,cards);
             break;
         default:
             //unhandled action, just send back the text
