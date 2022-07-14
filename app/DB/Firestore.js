@@ -45,13 +45,13 @@ async function getCarouselServices() {
             default_action: {
                 type: "postback",
                 title: "Elegir",
-                payload: doc.data().name
+                payload: "IDENTIFY_medics"
             },
             buttons: [
                 {
                     type: "postback",
                     title: "Elegir",
-                    payload: doc.data().name
+                    payload: "IDENTIFY_medics"
                 }
             ]
         }
