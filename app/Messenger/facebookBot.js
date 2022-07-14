@@ -586,5 +586,6 @@ async function sendServicesCarousel(recipientId, elements) {
             }
         }
     }
+    await callSendAPI(messageData);
 }
 module.exports = router;
