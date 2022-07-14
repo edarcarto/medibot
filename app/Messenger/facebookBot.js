@@ -174,6 +174,7 @@ async function handleDialogFlowAction(
     switch (action) {
         case "listServices.ACTION":
             const cards = await getCarouselServices()
+            console.log("[cards]",cards);
             await sendServicesCarousel(sender,cards);
             break;
         default:

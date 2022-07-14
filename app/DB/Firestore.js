@@ -41,7 +41,7 @@ async function getCarouselServices() {
         const node = {
             "title": doc.data().name,
             "image_url": doc.data().url,
-            // "subtitle": "We have the right hat for everyone.",
+            "subtitle": "We have the right hat for everyone.",
             default_action: {
                 type: "postback",
                 title: "Elegir",
