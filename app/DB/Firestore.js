@@ -102,7 +102,7 @@ async function getCarouselDoctors(parameters) {
 }
 
 async function getDoctorDates(parameters) {
-    const id = parseInt(parameters.fields.serviceId.stringValue);
+    const id = parseInt(parameters.fields.doctorId.stringValue);
     const snapshot = await db.collection('doctors').doc(id).get();
     const data = snapshot.data();
     let dataSet = [];
