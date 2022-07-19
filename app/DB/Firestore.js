@@ -1,5 +1,6 @@
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
+const moment = require('moment');
 
 const serviceAccount = require('./SA.js');
 initializeApp({
@@ -66,36 +67,54 @@ async function getCarouselServices() {
 }
 
 async function getCarouselDoctors(parameters) {
-    console.log("[getCarouselDoctors]",parameters.fields.serviceId.stringValue)
     const id = parseInt(parameters.fields.serviceId.stringValue);
-    const servicesRef = db.collection('doctors').where('serviceId','==',id);
+    const servicesRef = db.collection('doctors').where('serviceId', '==', id);
     const snapshot = await servicesRef.get();
     let dataSet = [];
-    snapshot.forEach(doc => {
-        const node = {
-            "title": doc.data().name,
-            "image_url": doc.data().url,
-            subtitle: `El doctor ${doc.data().name} es ${doc.data().position}`,
-            default_action: {
-                type: "web_url",
-                url: doc.data().url,
-                webview_height_ratio: "full",
-            },
-            buttons: [
-                {
-                    "type": "web_url",
-                    "url": doc.data().url,
-                    "title": "Ver Imagen"
+    if (!snapshot.empty) {
+        snapshot.forEach(doc => {
+            const node = {
+                "title": doc.data().name,
+                "image_url": doc.data().url,
+                subtitle: `El doctor ${doc.data().name} es ${doc.data().position}`,
+                default_action: {
+                    type: "web_url",
+                    url: doc.data().url,
+                    webview_height_ratio: "compact",
                 },
-                {
-                    type: "postback",
-                    title: "Elegir",
-                    payload: "IDENTIFY_schedules"
-                }
-            ]
-        }
-        dataSet.push(node);
-    });
+                buttons: [
+                    {
+                        "type": "web_url",
+                        "url": doc.data().url,
+                        "title": "Ver Imagen"
+                    },
+                    {
+                        type: "postback",
+                        title: "Ver horario",
+                        payload: doc.data().id
+                    }
+                ]
+            }
+            dataSet.push(node);
+        });
+    }
+    return dataSet;
+}
+
+async function getDoctorDates(parameters) {
+    const id = parseInt(parameters.fields.serviceId.stringValue);
+    const snapshot = await db.collection('doctors').doc(id).get();
+    const data = snapshot.data();
+    let dataSet = [];
+    // create horary
+    for (let i = 0; i < data.schedule.length; i++) {
+        const element = data.schedule[i];
+        dataSet.push({
+            content_type: "text",
+            title: `📅${element.workDate}`,
+            payload: element.id
+        });
+    }
     return dataSet;
 }
 
@@ -103,5 +122,6 @@ module.exports = {
     createUser,
     findUser,
     getCarouselServices,
-    getCarouselDoctors
+    getCarouselDoctors,
+    getDoctorDates
 };

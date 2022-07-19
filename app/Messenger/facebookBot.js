@@ -8,7 +8,13 @@ const axios = require("axios");
 const config = require("../config");
 const dialogflow = require("../dialogflow");
 const { structProtoToJson } = require("./helpers/structFunctions");
-const { createUser, findUser, getCarouselServices, getCarouselDoctors } = require('../DB/Firestore');
+const { 
+    createUser,
+    findUser,
+    getCarouselServices,
+    getCarouselDoctors,
+    getDoctorDates 
+} = require('../DB/Firestore');
 
 // Messenger API parameters
 if (!config.FB_PAGE_TOKEN) {
@@ -178,10 +184,15 @@ async function handleDialogFlowAction(
             await sendServicesCarousel(sender, services);
             break;
         case "listDoctors.ACTION":
-            console.log("[parameters]",parameters);
+            console.log("[parameters]", parameters);
             let doctors = await getCarouselDoctors(parameters)
             await handleMessages(messages, sender);
             await sendServicesCarousel(sender, doctors);
+            break;
+        case "listSchedule.ACTION":
+            console.log("[parameters]", parameters);
+            let dates = await getDoctorDates(parameters)
+            await sendQuickReplyHorary(sender, dates);
             break;
         default:
             //unhandled action, just send back the text
@@ -593,7 +604,21 @@ async function sendServicesCarousel(recipientId, elements) {
             }
         }
     }
-    console.log("[cards]", messageData);
+    await callSendAPI(messageData);
+}
+
+async function sendQuickReplyHorary(recipientId, elements) {
+
+    var messageData = {
+        recipient: {
+            id: recipientId
+        },
+        messaging_type: "RESPONSE",
+        message: {
+            text: "Seleccione un horario: 🏥",
+            quick_replies: elements
+        }
+    }
     await callSendAPI(messageData);
 }
 module.exports = router;
