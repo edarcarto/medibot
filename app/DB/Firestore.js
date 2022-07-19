@@ -111,7 +111,7 @@ async function getDoctorDates(parameters) {
         const element = data.schedule[i];
         dataSet.push({
             content_type: "text",
-            title: `📅${moment(element.start).format("DD/MM/YYYY")}`,
+            title: `📅${element.workDate}`,
             payload: element.id
         });
     }
