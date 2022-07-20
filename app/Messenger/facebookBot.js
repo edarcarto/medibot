@@ -13,7 +13,8 @@ const {
     findUser,
     getCarouselServices,
     getCarouselDoctors,
-    getDoctorDates 
+    getDoctorDates,
+    getDoctorHorary
 } = require('../DB/Firestore');
 
 // Messenger API parameters
