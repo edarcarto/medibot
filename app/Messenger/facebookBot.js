@@ -194,6 +194,9 @@ async function handleDialogFlowAction(
             let dates = await getDoctorDates(parameters)
             await sendQuickReplyHorary(sender, dates);
             break;
+        case "listHorary.ACTION":
+            console.log("[parameters]", parameters);
+            break;
         default:
             //unhandled action, just send back the text
             handleMessages(messages, sender);
