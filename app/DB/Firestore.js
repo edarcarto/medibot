@@ -106,7 +106,7 @@ async function getDoctorDates(parameters) {
     const snapshot = await db.collection('doctors').doc(id)
         .collection("schedule").get();
     let dataSet = [];
-    if(!snapshot.empty){
+    if (!snapshot.empty) {
         // create 
         // var payload = 
         snapshot.forEach(doc => {
@@ -123,22 +123,59 @@ async function getDoctorDates(parameters) {
     return dataSet;
 }
 
-async function getDoctorHorary(parameters) {
-    const doctorId = parameters.fields.doctorId.stringValue;
-    const scheduleId = parameters.fields.scheduleId.stringValue;
+async function getDoctorHorary(parameters, userId) {
+    let queryParams = JSON.parse(parameters.fields.params.stringValue);
+    const doctorId = queryParams.doctorId;
+    const scheduleId = queryParams.scheduleId;
+    // sacar los datos del doctor
+    const doctor = await db.collection('doctors').doc(doctorId).get();
+    const user = await db.collection('users').doc(userId).get();
+    const serviceId = doctor.data().serviceId.toString();
+    const service = await db.collection('services').doc(serviceId).get();
     const snapshot = await db.collection('doctors').doc(doctorId)
         .collection("schedule").doc(scheduleId).get();
+    const data = snapshot.data();
     let dataSet = [];
-    if(!snapshot.empty){
-        // create horary
-        snapshot.forEach(doc => {
-            dataSet.push({
-                content_type: "text",
-                title: `📅 ${doc.data().workDate}`,
-                payload: doc.data().id
-            });
+    let start = moment(data.start.toDate());
+    let end = moment(data.end.toDate());
+    console.log("[dataSet]", end.isSame(start));
+    let validator = true;
+    while (validator) {
+        let cpStart = start;
+        start.add(30, "minutes");
+        dataSet.push({
+            content_type: "text",
+            title: `${start.format("hh:mm A")} 🕒`,
+            payload: JSON.stringify({
+                user: user.data(),
+                start: cpStart,
+                end: start,
+                doctor: doctor.data(),
+                service: service.data(),
+                available: true
+            })
         });
+        if (start.isAfter(end)) {
+            validator = false;
+        }
     }
+    // do{
+    //     let cpStart = start;
+    //     start.add(30, "minutes");
+    //     dataSet.push({
+    //         content_type: "text",
+    //         title: `${start.format("hh:mm A")} 🕒`,
+    //         payload: JSON.stringify({
+    //             user: user.data(),
+    //             start: cpStart,
+    //             end: start,
+    //             doctor: doctor.data(),
+    //             service: service.data(),
+    //             available: true
+    //         })
+    //     });
+    // };
+    console.log("[dataSet]", dataSet);
     return dataSet;
 }
 
