@@ -615,7 +615,22 @@ async function sendQuickReplyHorary(recipientId, elements) {
         },
         messaging_type: "RESPONSE",
         message: {
-            text: "Seleccione un horario: 🏥",
+            text: "Seleccione una fecha disponible para su cita: 🏥",
+            quick_replies: elements
+        }
+    }
+    await callSendAPI(messageData);
+}
+
+async function sendQuickReplyHoraryRange(recipientId, elements) {
+
+    var messageData = {
+        recipient: {
+            id: recipientId
+        },
+        messaging_type: "RESPONSE",
+        message: {
+            text: "Seleccione un horario disponible: 📑",
             quick_replies: elements
         }
     }

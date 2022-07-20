@@ -107,6 +107,29 @@ async function getDoctorDates(parameters) {
         .collection("schedule").get();
     let dataSet = [];
     if(!snapshot.empty){
+        // create 
+        // var payload = 
+        snapshot.forEach(doc => {
+            dataSet.push({
+                content_type: "text",
+                title: `📅 ${doc.data().workDate}`,
+                payload: JSON.stringify({
+                    doctorId: id,
+                    scheduleId: doc.data().id
+                })
+            });
+        });
+    }
+    return dataSet;
+}
+
+async function getDoctorHorary(parameters) {
+    const doctorId = parameters.fields.doctorId.stringValue;
+    const scheduleId = parameters.fields.scheduleId.stringValue;
+    const snapshot = await db.collection('doctors').doc(doctorId)
+        .collection("schedule").doc(scheduleId).get();
+    let dataSet = [];
+    if(!snapshot.empty){
         // create horary
         snapshot.forEach(doc => {
             dataSet.push({
@@ -116,7 +139,6 @@ async function getDoctorDates(parameters) {
             });
         });
     }
-    console.log("[data.schedule]",dataSet);
     return dataSet;
 }
 
@@ -125,5 +147,6 @@ module.exports = {
     findUser,
     getCarouselServices,
     getCarouselDoctors,
-    getDoctorDates
+    getDoctorDates,
+    getDoctorHorary
 };
