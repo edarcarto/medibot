@@ -103,19 +103,20 @@ async function getCarouselDoctors(parameters) {
 
 async function getDoctorDates(parameters) {
     const id = parameters.fields.doctorId.stringValue;
-    console.log("que pasó",id);
-    const snapshot = await db.collection('doctors').doc(id).get();
-    const data = snapshot.data();
+    const snapshot = await db.collection('doctors').doc(id)
+        .collection("schedule").get();
     let dataSet = [];
-    // create horary
-    for (let i = 0; i < data.schedule.length; i++) {
-        const element = data.schedule[i];
-        dataSet.push({
-            content_type: "text",
-            title: `📅${element.workDate}`,
-            payload: element.id
+    if(!snapshot.empty){
+        // create horary
+        snapshot.forEach(doc => {
+            dataSet.push({
+                content_type: "text",
+                title: `📅 ${doc.data().workDate}`,
+                payload: doc.data().id
+            });
         });
     }
+    console.log("[data.schedule]",dataSet);
     return dataSet;
 }
 
