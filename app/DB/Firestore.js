@@ -142,7 +142,7 @@ async function getDoctorHorary(parameters, userId) {
     let validator = true;
     while (validator) {
         let cpStart = start;
-        let end = start.add(30, "minutes");
+        // let end = start.add(30, "minutes");
         start.add(30, "minutes");
         dataSet.push({
             content_type: "text",
@@ -150,7 +150,7 @@ async function getDoctorHorary(parameters, userId) {
             payload: JSON.stringify({
                 fullName: `${user.data().firstName} ${user.data().lastName}`,
                 start: cpStart,
-                end: end,
+                end: start,
                 doctorName: doctor.data().name,
                 serviceName: service.data().name,
                 available: true
