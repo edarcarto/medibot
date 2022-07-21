@@ -147,11 +147,11 @@ async function getDoctorHorary(parameters, userId) {
             content_type: "text",
             title: `${start.format("hh:mm A")} 🕒`,
             payload: JSON.stringify({
-                user: user.data(),
+                fullName: `${user.data().firstName} ${user.data().lastName}`,
                 start: cpStart,
                 end: start,
-                doctor: doctor.data(),
-                service: service.data(),
+                doctorName: doctor.data().name,
+                serviceName: service.data().name,
                 available: true
             })
         });
