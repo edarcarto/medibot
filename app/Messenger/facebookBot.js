@@ -674,7 +674,7 @@ async function sendTextTicket(recipientId, parameters) {
         let queryParams = JSON.parse(parameters.fields.ticket.stringValue);
         let start = moment(queryParams.start);
         let end = moment(queryParams.end);
-        text = text
+        text = fullText
             .replace("{fullName}", `${queryParams.fullName}`)
             .replace("{serviceName}", queryParams.serviceName)
             .replace("{doctorName}", queryParams.doctorName)
@@ -699,9 +699,9 @@ async function sendTextEnd(recipientId, parameters) {
     if (fullText.includes("{fullName}") || fullText.includes("{ticket}")) {
         // let userData = await getUserData(recipientId);
         let queryParams = doctorName.data();
-        let start = moment(queryParams.start);
-        let end = moment(queryParams.end);
-        text = text
+        // let start = moment(queryParams.start);
+        // let end = moment(queryParams.end);
+        text = fullText
             .replace("{fullName}", `${queryParams.fullName}`)
             .replace("{ticket}", queryParams.id);
     }
