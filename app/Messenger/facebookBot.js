@@ -673,9 +673,9 @@ async function sendTextTicket(recipientId, parameters) {
         let start = moment(queryParams.start);
         let end = moment(queryParams.end);
         text = text
-            .replace("{fullName}", `${queryParams.user.firstName} ${queryParams.user.lastName}`)
-            .replace("{serviceName}", queryParams.service.name)
-            .replace("{doctorName}", queryParams.doctor.name)
+            .replace("{fullName}", `${queryParams.fullName}`)
+            .replace("{serviceName}", queryParams.serviceName)
+            .replace("{doctorName}", queryParams.doctorName)
             .replace("{onlyDate}", start.format("DD/MM/YYYY"))
             .replace("{onlyHour}", `${start.format("hh:mm A")} - ${end.format("hh:mm A")}`);
     }
@@ -696,11 +696,11 @@ async function sendTextEnd(recipientId, parameters) {
     por favor, acercarse con una hora de anticipación`;
     if (fullText.includes("{fullName}") || fullText.includes("{ticket}")) {
         // let userData = await getUserData(recipientId);
-        let queryParams = JSON.parse(parameters.fields.ticket.stringValue);
+        let queryParams = doctorName.data();
         let start = moment(queryParams.start);
         let end = moment(queryParams.end);
         text = text
-            .replace("{fullName}", `${queryParams.user.firstName} ${queryParams.user.lastName}`)
+            .replace("{fullName}", `${queryParams.fullName}`)
             .replace("{ticket}", queryParams.id);
     }
     var messageData = {
