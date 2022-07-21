@@ -702,7 +702,8 @@ async function sendTextEnd(recipientId, parameters) {
     var text = "";
     if (fullText.includes("{fullName}") || fullText.includes("{ticket}")) {
         // let userData = await getUserData(recipientId);
-        let queryParams = doctorName.data();
+        let queryParams = parameters.data();
+        console.log("[queryParams]",queryParams);
         // let start = moment(queryParams.start);
         // let end = moment(queryParams.end);
         text = fullText
