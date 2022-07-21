@@ -206,8 +206,9 @@ async function handleDialogFlowAction(
             break;
         case "ConfirmSchedule.ACTION":
             console.log("[parameters]", parameters);
-            await passQuickReply(parameters);
-            await sendTextTicket(sender, parameters);
+            let text = await sendTextTicket(parameters);
+            let eles = await passQuickReply(parameters);
+            await sendQuickReplyTicket(sender, text, eles);
             break;
         case "endSchedule.ACTION":
             console.log("[parameters]", parameters);
@@ -657,7 +658,7 @@ async function sendQuickReplyHoraryRange(recipientId, elements) {
     await callSendAPI(messageData);
 }
 
-async function sendTextTicket(recipientId, parameters) {
+async function sendTextTicket(parameters) {
     let fullText = `Estimado {fullName},
     desea reservar la cita: 🚑 
     ................................
@@ -681,15 +682,16 @@ async function sendTextTicket(recipientId, parameters) {
             .replace("{onlyDate}", start.format("DD/MM/YYYY"))
             .replace("{onlyHour}", `${start.format("hh:mm A")} - ${end.format("hh:mm A")}`);
     }
-    var messageData = {
-        recipient: {
-            id: recipientId,
-        },
-        message: {
-            text: text,
-        },
-    };
-    await callSendAPI(messageData);
+    return text;
+    // var messageData = {
+    //     recipient: {
+    //         id: recipientId,
+    //     },
+    //     message: {
+    //         text: text,
+    //     },
+    // };
+    // await callSendAPI(messageData);
 }
 
 async function sendTextEnd(recipientId, parameters) {
@@ -713,6 +715,21 @@ async function sendTextEnd(recipientId, parameters) {
             text: text,
         },
     };
+    await callSendAPI(messageData);
+}
+
+async function sendQuickReplyTicket(recipientId, text ,elements) {
+
+    var messageData = {
+        recipient: {
+            id: recipientId
+        },
+        messaging_type: "RESPONSE",
+        message: {
+            text: text,
+            quick_replies: elements
+        }
+    }
     await callSendAPI(messageData);
 }
 module.exports = router;
