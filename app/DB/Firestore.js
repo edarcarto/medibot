@@ -163,7 +163,7 @@ async function getDoctorHorary(parameters, userId) {
     return dataSet;
 }
 
-await function passQuickReply(params) {
+function passQuickReply(params) {
     let queryParams = JSON.parse(params.fields.ticket.stringValue);
     const fullParams = [
         {
@@ -180,10 +180,10 @@ await function passQuickReply(params) {
     return fullParams;
 }
 
-await function saveHorary(params) {
+async function saveHorary(params) {
     let preBody = JSON.parse(params.fields.ticket.stringValue);
     const body = {...preBody};
-    const docRef = db.collection('reserved').add(body);
+    const docRef = await db.collection('reserved').add(body);
     return docRef;
 }
 
