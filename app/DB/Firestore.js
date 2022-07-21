@@ -170,7 +170,7 @@ function passQuickReply(params) {
         {
             content_type: "text",
             title: "👍 Si",
-            payload: queryParams
+            payload: JSON.stringify(queryParams)
         },
         {
             content_type: "text",
