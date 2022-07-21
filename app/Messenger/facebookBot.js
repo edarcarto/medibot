@@ -8,13 +8,15 @@ const axios = require("axios");
 const config = require("../config");
 const dialogflow = require("../dialogflow");
 const { structProtoToJson } = require("./helpers/structFunctions");
-const { 
+const {
     createUser,
     findUser,
     getCarouselServices,
     getCarouselDoctors,
     getDoctorDates,
-    getDoctorHorary
+    getDoctorHorary,
+    passQuickReply,
+    saveHorary
 } = require('../DB/Firestore');
 
 // Messenger API parameters
@@ -196,9 +198,19 @@ async function handleDialogFlowAction(
             await sendQuickReplyHorary(sender, dates);
             break;
         case "listHorary.ACTION":
-            console.log("[parameters]", parameters,sender);
-            let schedules = await getDoctorHorary(parameters,sender);
+            console.log("[parameters]", parameters, sender);
+            let schedules = await getDoctorHorary(parameters, sender);
             await sendQuickReplyHoraryRange(sender, schedules);
+            break;
+        case "ConfirmSchedule.ACTION":
+            console.log("[parameters]", parameters);
+            await sendTextTicket(sender, parameters);
+            await passQuickReply(parameters);
+            break;
+        case "endSchedule.ACTION":
+            console.log("[parameters]", parameters);
+            const save = await saveHorary(parameters);
+            await sendTextEnd(sender, save);
             break;
         default:
             //unhandled action, just send back the text
@@ -640,6 +652,65 @@ async function sendQuickReplyHoraryRange(recipientId, elements) {
             quick_replies: elements
         }
     }
+    await callSendAPI(messageData);
+}
+
+async function sendTextTicket(recipientId, parameters) {
+    let fullText = `Estimado {fullName},
+    desea reservar la cita: 🚑 
+    ...............
+    Servicio: {serviceName}
+    Medico: {doctorName}
+    Fecha: {onlyDate}
+    Horio: {onlyHour}
+    ...............
+    Por favor, debe estar presente en nuestro local con una hora de anticipación 💞
+    ...............`;
+    if (fullText.includes("{serviceName}") || fullText.includes("{doctorName}")
+        || fullText.includes("{onlyDate}") || fullText.includes("{onlyHour}")) {
+        // let userData = await getUserData(recipientId);
+        let queryParams = JSON.parse(parameters.fields.ticket.stringValue);
+        let start = moment(queryParams.start);
+        let end = moment(queryParams.end);
+        text = text
+            .replace("{fullName}", `${queryParams.user.firstName} ${queryParams.user.lastName}`)
+            .replace("{serviceName}", queryParams.service.name)
+            .replace("{doctorName}", queryParams.doctor.name)
+            .replace("{onlyDate}", start.format("DD/MM/YYYY"))
+            .replace("{onlyHour}", `${start.format("hh:mm A")} - ${end.format("hh:mm A")}`);
+    }
+    var messageData = {
+        recipient: {
+            id: recipientId,
+        },
+        message: {
+            text: text,
+        },
+    };
+    await callSendAPI(messageData);
+}
+
+async function sendTextEnd(recipientId, parameters) {
+    let fullText = `Estimado {fullName},
+    Su cita se ha reservado con exito con el ticket {ticket}
+    por favor, acercarse con una hora de anticipación`;
+    if (fullText.includes("{fullName}") || fullText.includes("{ticket}")) {
+        // let userData = await getUserData(recipientId);
+        let queryParams = JSON.parse(parameters.fields.ticket.stringValue);
+        let start = moment(queryParams.start);
+        let end = moment(queryParams.end);
+        text = text
+            .replace("{fullName}", `${queryParams.user.firstName} ${queryParams.user.lastName}`)
+            .replace("{ticket}", queryParams.id);
+    }
+    var messageData = {
+        recipient: {
+            id: recipientId,
+        },
+        message: {
+            text: text,
+        },
+    };
     await callSendAPI(messageData);
 }
 module.exports = router;
