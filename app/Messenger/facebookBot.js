@@ -669,6 +669,7 @@ async function sendTextTicket(parameters) {
     ................................
     Por favor, debe estar presente en nuestro local con una hora de anticipación 💞
     ................................`;
+    var text = "";
     if (fullText.includes("{serviceName}") || fullText.includes("{doctorName}")
         || fullText.includes("{onlyDate}") || fullText.includes("{onlyHour}")) {
         // let userData = await getUserData(recipientId);
@@ -698,6 +699,7 @@ async function sendTextEnd(recipientId, parameters) {
     let fullText = `Estimado {fullName},
     Su cita se ha reservado con exito con el ticket {ticket}
     por favor, acercarse con una hora de anticipación`;
+    var text = "";
     if (fullText.includes("{fullName}") || fullText.includes("{ticket}")) {
         // let userData = await getUserData(recipientId);
         let queryParams = doctorName.data();
