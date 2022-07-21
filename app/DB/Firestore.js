@@ -159,24 +159,32 @@ async function getDoctorHorary(parameters, userId) {
             validator = false;
         }
     }
-    // do{
-    //     let cpStart = start;
-    //     start.add(30, "minutes");
-    //     dataSet.push({
-    //         content_type: "text",
-    //         title: `${start.format("hh:mm A")} 🕒`,
-    //         payload: JSON.stringify({
-    //             user: user.data(),
-    //             start: cpStart,
-    //             end: start,
-    //             doctor: doctor.data(),
-    //             service: service.data(),
-    //             available: true
-    //         })
-    //     });
-    // };
     console.log("[dataSet]", dataSet);
     return dataSet;
+}
+
+await function passQuickReply(params) {
+    let queryParams = JSON.parse(params.fields.ticket.stringValue);
+    const fullParams = [
+        {
+            content_type: "text",
+            title: "👍 Si",
+            payload: queryParams
+        },
+        {
+            content_type: "text",
+            title: "⛔ No",
+            payload: "NO"
+        }
+    ];
+    return fullParams;
+}
+
+await function saveHorary(params) {
+    let preBody = JSON.parse(params.fields.ticket.stringValue);
+    const body = {...preBody};
+    const docRef = db.collection('reserved').add(body);
+    return docRef;
 }
 
 module.exports = {
@@ -185,5 +193,7 @@ module.exports = {
     getCarouselServices,
     getCarouselDoctors,
     getDoctorDates,
-    getDoctorHorary
+    getDoctorHorary,
+    passQuickReply,
+    saveHorary
 };
