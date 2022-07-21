@@ -206,8 +206,8 @@ async function handleDialogFlowAction(
             break;
         case "ConfirmSchedule.ACTION":
             console.log("[parameters]", parameters);
-            await sendTextTicket(sender, parameters);
             await passQuickReply(parameters);
+            await sendTextTicket(sender, parameters);
             break;
         case "endSchedule.ACTION":
             console.log("[parameters]", parameters);
@@ -660,14 +660,14 @@ async function sendQuickReplyHoraryRange(recipientId, elements) {
 async function sendTextTicket(recipientId, parameters) {
     let fullText = `Estimado {fullName},
     desea reservar la cita: 🚑 
-    ...............
+    ................................
     Servicio: {serviceName}
     Medico: {doctorName}
     Fecha: {onlyDate}
     Horio: {onlyHour}
-    ...............
+    ................................
     Por favor, debe estar presente en nuestro local con una hora de anticipación 💞
-    ...............`;
+    ................................`;
     if (fullText.includes("{serviceName}") || fullText.includes("{doctorName}")
         || fullText.includes("{onlyDate}") || fullText.includes("{onlyHour}")) {
         // let userData = await getUserData(recipientId);
